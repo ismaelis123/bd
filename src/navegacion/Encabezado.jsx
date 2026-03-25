@@ -1,31 +1,58 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "../database/supabaseconfig";
 
 function Encabezado() {
 
-  const usuario = true; // simulación de sesión
+  const [usuario, setUsuario] = useState(null);
 
-  const cerrarSesion = () => {
-    console.log("Sesión cerrada");
+  useEffect(() => {
+
+    // 🔥 FORZAR CIERRE DE SESIÓN AL INICIAR (para pruebas)
+    const cerrar = async () => {
+      await supabase.auth.signOut();
+    };
+
+    cerrar();
+
+    // 🔥 ESCUCHAR CAMBIOS DE LOGIN
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUsuario(session?.user || null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+
+  }, []);
+
+  const cerrarSesion = async () => {
+    await supabase.auth.signOut();
   };
 
-  const mostrarMenu = usuario ? true : false;
-
   return (
-    <nav>
-      <h2>Mi Aplicación</h2>
+    <nav className="navbar">
+      <h2>Mi Aplicación 🚀</h2>
 
-      <Link to="/">Inicio</Link>
+      <div>
+        <Link to="/">Inicio</Link>
 
-      {mostrarMenu ? (
-        <>
-          <Link to="/productos">Productos</Link>
-          <Link to="/categorias">Categorías</Link>
-          <Link to="/catalogo">Catálogo</Link>
-          <button onClick={cerrarSesion}>Cerrar Sesión</button>
-        </>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
+        {usuario ? (
+          <>
+            <Link to="/productos">Productos</Link>
+            <Link to="/categorias">Categorías</Link>
+            <Link to="/catalogo">Catálogo</Link>
+
+            <button className="btn" onClick={cerrarSesion}>
+              Cerrar Sesión
+            </button>
+          </>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
+      </div>
     </nav>
   );
 }
