@@ -1,45 +1,45 @@
 import { useState } from "react";
 import { supabase } from "../database/supabaseconfig";
+import { useNavigate } from "react-router-dom";
 
-const FormularioLogin = ({ setSesion }) => {
+const FormularioLogin = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const iniciarSesion = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password
     });
 
     if (error) {
-      alert("Error al iniciar sesión");
+      alert("Credenciales incorrectas");
     } else {
-      setSesion(data.user);
+      navigate("/");
     }
   };
 
   return (
-    <form onSubmit={iniciarSesion} className="card">
+    <form onSubmit={iniciarSesion} className="login-card">
       <h2>Iniciar Sesión</h2>
 
       <input
         type="email"
         placeholder="Correo"
-        value={email}
         onChange={(e) => setEmail(e.target.value)}
-      /><br /><br />
+      />
 
       <input
         type="password"
         placeholder="Contraseña"
-        value={password}
         onChange={(e) => setPassword(e.target.value)}
-      /><br /><br />
+      />
 
-      <button className="btn">Ingresar</button>
+      <button className="btn btn-primary">Ingresar</button>
     </form>
   );
 };

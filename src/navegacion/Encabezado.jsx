@@ -1,59 +1,52 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../database/supabaseconfig";
 
 function Encabezado() {
 
-  const [usuario, setUsuario] = useState(null);
-
-  useEffect(() => {
-
-    // 🔥 FORZAR CIERRE DE SESIÓN AL INICIAR (para pruebas)
-    const cerrar = async () => {
-      await supabase.auth.signOut();
-    };
-
-    cerrar();
-
-    // 🔥 ESCUCHAR CAMBIOS DE LOGIN
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUsuario(session?.user || null);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-
-  }, []);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const navigate = useNavigate();
 
   const cerrarSesion = async () => {
     await supabase.auth.signOut();
+    navigate("/login");
+  };
+
+  const toggleMenu = () => {
+    setMenuAbierto(!menuAbierto);
+  };
+
+  const cerrarMenu = () => {
+    setMenuAbierto(false);
   };
 
   return (
-    <nav className="navbar">
-      <h2>Mi Aplicación 🚀</h2>
+    <header className="navbar">
 
-      <div>
-        <Link to="/">Inicio</Link>
+      <h2>Mi App</h2>
 
-        {usuario ? (
-          <>
-            <Link to="/productos">Productos</Link>
-            <Link to="/categorias">Categorías</Link>
-            <Link to="/catalogo">Catálogo</Link>
-
-            <button className="btn" onClick={cerrarSesion}>
-              Cerrar Sesión
-            </button>
-          </>
-        ) : (
-          <Link to="/login">Login</Link>
-        )}
+      {/* BOTÓN HAMBURGUESA */}
+      <div className={`hamburger ${menuAbierto ? "active" : ""}`} onClick={toggleMenu}>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    </nav>
+
+      {/* MENÚ */}
+      <nav className={`nav-menu ${menuAbierto ? "open" : ""}`}>
+
+        <Link to="/" onClick={cerrarMenu}>Inicio</Link>
+        <Link to="/categorias" onClick={cerrarMenu}>Categorías</Link>
+        <Link to="/productos" onClick={cerrarMenu}>Productos</Link>
+        <Link to="/catalogo" onClick={cerrarMenu}>Catálogo</Link>
+
+        <button className="btn logout" onClick={cerrarSesion}>
+          Salir
+        </button>
+
+      </nav>
+
+    </header>
   );
 }
 

@@ -10,48 +10,33 @@ import Pagina404 from "./views/Pagina404";
 import Encabezado from "./navegacion/Encabezado";
 import RutaProtegida from "./rutas/RutaProtegida";
 
-import "./index.css";
-
 function App() {
   return (
     <Router>
-      <Encabezado />
-
       <Routes>
-        {/* Públicas */}
-        <Route path="/" element={<Inicio />} />
+
+        {/* LOGIN */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protegidas */}
+        {/* TODO PROTEGIDO */}
         <Route
-          path="/productos"
+          path="/*"
           element={
             <RutaProtegida>
-              <Productos />
+              <>
+                <Encabezado />
+                <Routes>
+                  <Route path="/" element={<Inicio />} />
+                  <Route path="/productos" element={<Productos />} />
+                  <Route path="/categorias" element={<Categorias />} />
+                  <Route path="/catalogo" element={<Catalogo />} />
+                  <Route path="*" element={<Pagina404 />} />
+                </Routes>
+              </>
             </RutaProtegida>
           }
         />
 
-        <Route
-          path="/categorias"
-          element={
-            <RutaProtegida>
-              <Categorias />
-            </RutaProtegida>
-          }
-        />
-
-        <Route
-          path="/catalogo"
-          element={
-            <RutaProtegida>
-              <Catalogo />
-            </RutaProtegida>
-          }
-        />
-
-        {/* 404 */}
-        <Route path="*" element={<Pagina404 />} />
       </Routes>
     </Router>
   );
