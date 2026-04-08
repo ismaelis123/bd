@@ -8,20 +8,32 @@ function RutaProtegida({ children }) {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    const getUser = async () => {
+
+    // sesión actual
+    const checkUser = async () => {
       const { data } = await supabase.auth.getUser();
       setUsuario(data.user);
       setCargando(false);
     };
 
-    getUser();
+    checkUser();
+
+    // escuchar cambios (LOGIN / LOGOUT)
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUsuario(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+
   }, []);
 
-  if (cargando) return <p>Cargando...</p>;
+  if (cargando) return <p style={{ textAlign: "center" }}>Cargando...</p>;
 
-  if (!usuario) {
-    return <Navigate to="/login" />;
-  }
+  if (!usuario) return <Navigate to="/login" replace />;
 
   return children;
 }
