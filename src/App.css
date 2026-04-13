@@ -1,18 +1,37 @@
-/* NAVBAR */
-.navbar {
-  background: #0f172a;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
+/* ====================== ESTILO FERRETERÍA ====================== */
+:root {
+  --primary: #f97316;     /* Naranja ferretería */
+  --dark: #1e2937;
+  --gray: #334155;
+  --light: #f8fafc;
 }
 
-/* HAMBURGUESA */
+body {
+  background: #f1f5f9;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+  background: var(--dark);
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h2 {
+  margin: 0;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 1px;
+}
+
 .hamburger {
-  width: 30px;
-  height: 22px;
+  width: 32px;
+  height: 26px;
   display: none;
   flex-direction: column;
   justify-content: space-between;
@@ -21,69 +40,146 @@
 
 .hamburger span {
   height: 4px;
-  width: 100%;
   background: white;
   border-radius: 2px;
-  transition: 0.3s;
+  transition: all 0.3s;
 }
 
-/* ANIMACIÓN X */
-.hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
 
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
-/* MENÚ NORMAL */
 .nav-menu {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   align-items: center;
 }
 
 .nav-menu a {
-  color: #e2e8f0;
+  color: #cbd5e1;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
 }
 
 .nav-menu a:hover {
-  color: #38bdf8;
+  color: var(--primary);
 }
 
-/* BOTÓN */
 .logout {
+  background: #ef4444;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+}
+
+/* ==================== LOGIN ==================== */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e2937 0%, #334155 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  padding: 40px 35px;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-card h2 {
+  text-align: center;
+  color: var(--dark);
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+/* ==================== CONTENIDO GENERAL ==================== */
+.container {
+  padding: 2rem 1rem;
+}
+
+h1.display-6 {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* ==================== TABLA CATEGORÍAS ==================== */
+.shadow-table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.table thead {
+  background: var(--dark);
+  color: white;
+}
+
+.btn-warning {
+  background: #f59e0b;
+  border: none;
+}
+
+.btn-danger {
   background: #ef4444;
 }
 
-/* 📱 RESPONSIVE */
+/* ==================== MODALES ==================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 480px;
+  padding: 30px;
+  margin: 20px;
+}
+
+.card h2 {
+  color: var(--dark);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-
-  .hamburger {
-    display: flex;
-  }
-
+  .hamburger { display: flex; }
+  
   .nav-menu {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 70%;
+    width: 80%;
     height: 100vh;
-    background: #1e293b;
+    background: var(--gray);
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
-    transition: 0.3s;
+    gap: 40px;
+    transition: 0.4s ease;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
   }
-
-  .nav-menu.open {
-    right: 0;
-  }
-
+  
+  .nav-menu.open { right: 0; }
+  
+  .login-card { padding: 30px 20px; }
 }
