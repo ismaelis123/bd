@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { supabase } from "../database/supabaseconfig";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../database/supabaseconfig";
 
 const FormularioLogin = () => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -24,23 +23,29 @@ const FormularioLogin = () => {
   };
 
   return (
-    <form onSubmit={iniciarSesion} className="login-card">
+    <div className="login-card">
       <h2>Iniciar Sesión</h2>
 
-      <input
-        type="email"
-        placeholder="Correo"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <form onSubmit={iniciarSesion}>
+        <input
+          type="email"
+          placeholder="Correo"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-      <button className="btn btn-primary">Ingresar</button>
-    </form>
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
   );
 };
 
