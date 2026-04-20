@@ -1,14 +1,19 @@
-/* ====================== ESTILO FERRETERÍA ====================== */
+/* ====================== ESTILO FERRETERÍA PRO - CORREGIDO ====================== */
 :root {
-  --primary: #f97316;     /* Naranja ferretería */
+  --primary: #f97316;
+  --primary-dark: #ea580c;
   --dark: #1e2937;
   --gray: #334155;
   --light: #f8fafc;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --warning: #f59e0b;
 }
 
 body {
   background: #f1f5f9;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #1e2937;
 }
 
 /* ==================== NAVBAR ==================== */
@@ -16,7 +21,7 @@ body {
   background: var(--dark);
   color: white;
   padding: 1rem 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -26,7 +31,8 @@ body {
   margin: 0;
   font-weight: 800;
   color: var(--primary);
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-size: 1.6rem;
 }
 
 .hamburger {
@@ -41,8 +47,8 @@ body {
 .hamburger span {
   height: 4px;
   background: white;
-  border-radius: 2px;
-  transition: all 0.3s;
+  border-radius: 3px;
+  transition: all 0.3s ease;
 }
 
 .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
@@ -51,7 +57,7 @@ body {
 
 .nav-menu {
   display: flex;
-  gap: 25px;
+  gap: 28px;
   align-items: center;
 }
 
@@ -59,20 +65,27 @@ body {
   color: #cbd5e1;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s;
+  transition: all 0.3s;
 }
 
 .nav-menu a:hover {
   color: var(--primary);
+  transform: translateY(-2px);
 }
 
 .logout {
-  background: #ef4444;
+  background: var(--danger);
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
   color: white;
   font-weight: 600;
+  transition: all 0.3s;
+}
+
+.logout:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
 }
 
 /* ==================== LOGIN ==================== */
@@ -87,23 +100,23 @@ body {
 
 .login-card {
   background: white;
-  padding: 40px 35px;
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  padding: 45px 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
 }
 
 .login-card h2 {
   text-align: center;
   color: var(--dark);
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   font-weight: 700;
 }
 
 /* ==================== CONTENIDO GENERAL ==================== */
 .container {
-  padding: 2rem 1rem;
+  padding: 2rem 1.2rem;
 }
 
 h1.display-6 {
@@ -111,75 +124,128 @@ h1.display-6 {
   font-weight: 700;
 }
 
-/* ==================== TABLA CATEGORÍAS ==================== */
-.shadow-table {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+/* ==================== MODALES ==================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
 }
 
+.card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 500px;
+  padding: 35px;
+}
+
+.card h2 {
+  color: var(--dark);
+  margin-bottom: 28px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ====================== TABLA EN ESCRITORIO ====================== */
 .table thead {
   background: var(--dark);
   color: white;
 }
 
-.btn-warning {
-  background: #f59e0b;
-  border: none;
+.table th, .table td {
+  vertical-align: middle;
+  padding: 1rem;
 }
 
-.btn-danger {
-  background: #ef4444;
+/* ====================== TARJETAS MÓVIL - ESTILO DISCOSA ====================== */
+.categoria-card {
+  border-radius: 12px;
+  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* ==================== MODALES ==================== */
-.modal-backdrop {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
+.categoria-card:hover {
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.15);
+  transform: translateY(-3px);
+}
+
+.bookmark-icon {
+  width: 48px;
+  height: 48px;
+  background: #f8fafc;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  font-size: 26px;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
 }
 
-.card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  width: 100%;
-  max-width: 480px;
-  padding: 30px;
-  margin: 20px;
+.status-badge {
+  background: #16a34a;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 30px;
+  white-space: nowrap;
 }
 
-.card h2 {
-  color: var(--dark);
-  margin-bottom: 25px;
-  text-align: center;
-}
-
-/* Responsive */
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .hamburger { display: flex; }
+  .hamburger { 
+    display: flex; 
+  }
   
   .nav-menu {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 80%;
+    width: 85%;
     height: 100vh;
     background: var(--gray);
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 45px;
     transition: 0.4s ease;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.4);
+    font-size: 1.2rem;
   }
   
-  .nav-menu.open { right: 0; }
+  .nav-menu.open { 
+    right: 0; 
+  }
+
+  .login-card { 
+    padding: 30px 25px; 
+  }
+
+  .container {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 1rem 1.2rem;
+  }
+
+  .categoria-card .card-body {
+    padding: 14px 16px !important;
+  }
   
-  .login-card { padding: 30px 20px; }
+  .bookmark-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 23px;
+  }
 }

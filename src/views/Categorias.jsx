@@ -11,7 +11,7 @@ function Categorias() {
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  // Estados para los modales
+  // Estados para modales
   const [mostrarModalRegistro, setMostrarModalRegistro] = useState(false);
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
@@ -29,7 +29,7 @@ function Categorias() {
 
     if (error) {
       console.error("Error al cargar categorías:", error);
-      alert("Error al cargar categorías: " + error.message);
+      alert("Error al cargar: " + error.message);
     } else {
       setCategorias(data || []);
     }
@@ -40,7 +40,6 @@ function Categorias() {
     cargarCategorias();
   }, []);
 
-  // Abrir modales
   const handleEditar = (cat) => {
     setCategoriaEditar(cat);
     setMostrarModalEdicion(true);
@@ -55,23 +54,26 @@ function Categorias() {
     <Container className="mt-4">
       <Row>
         <Col>
-          <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h1 className="display-6 fw-bold text-primary mb-0">
-              🛠️ Gestión de Categorías
-            </h1>
+          {/* Header estilo Discosa */}
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex align-items-center gap-3">
+              <span className="fs-3">📚</span>
+              <h1 className="display-6 fw-bold mb-0 text-dark">Categorías</h1>
+            </div>
             
             <Button 
-              variant="success" 
+              variant="primary" 
               size="lg"
-              className="shadow-sm"
+              className="rounded-pill px-4"
               onClick={() => setMostrarModalRegistro(true)}
             >
-              + Nueva Categoría
+              + Nueva
             </Button>
           </div>
 
           <hr className="mb-4" />
 
+          {/* Lista de Categorías */}
           <TablaCategorias 
             categorias={categorias} 
             cargando={cargando}
@@ -81,16 +83,13 @@ function Categorias() {
         </Col>
       </Row>
 
-      {/* ==================== MODALES ==================== */}
-
-      {/* Modal Registro */}
+      {/* Modales */}
       <ModalRegistroCategoria
         mostrar={mostrarModalRegistro}
         onCerrar={() => setMostrarModalRegistro(false)}
         onGuardado={cargarCategorias}
       />
 
-      {/* Modal Edición */}
       <ModalEdicionCategoria
         mostrar={mostrarModalEdicion}
         onCerrar={() => setMostrarModalEdicion(false)}
@@ -98,7 +97,6 @@ function Categorias() {
         onGuardado={cargarCategorias}
       />
 
-      {/* Modal Eliminación */}
       <ModalEliminacionCategoria
         mostrar={mostrarModalEliminacion}
         onCerrar={() => setMostrarModalEliminacion(false)}
