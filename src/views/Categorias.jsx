@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { supabase } from "../database/supabaseconfig";
 
 import ModalRegistroCategoria from "../categorias/ModalRegistroCategoria";
@@ -7,11 +7,17 @@ import ModalEdicionCategoria from "../categorias/ModalEdicionCategoria";
 import ModalEliminacionCategoria from "../categorias/ModalEliminacionCategoria";
 import TablaCategorias from "../categorias/TablaCategorias";
 
+import CuadroBusquedas from "../busquedas/CuadroBusquedas";
+import Paginacion from "../components/ordenamiento/Paginacion";
+
 function Categorias() {
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  // Estados para modales
+  const [textoBusqueda, setTextoBusqueda] = useState("");
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 5;
+
   const [mostrarModalRegistro, setMostrarModalRegistro] = useState(false);
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
@@ -27,12 +33,7 @@ function Categorias() {
       .select("*")
       .order("id_categoria", { ascending: true });
 
-    if (error) {
-      console.error("Error al cargar categorías:", error);
-      alert("Error al cargar: " + error.message);
-    } else {
-      setCategorias(data || []);
-    }
+    if (!error) setCategorias(data);
     setCargando(false);
   };
 
@@ -40,50 +41,63 @@ function Categorias() {
     cargarCategorias();
   }, []);
 
-  const handleEditar = (cat) => {
-    setCategoriaEditar(cat);
-    setMostrarModalEdicion(true);
-  };
+  const categoriasFiltradas = categorias.filter((cat) =>
+    cat.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
+    cat.descripcion?.toLowerCase().includes(textoBusqueda.toLowerCase())
+  );
 
-  const handleEliminar = (cat) => {
-    setCategoriaEliminar(cat);
-    setMostrarModalEliminacion(true);
-  };
+  const totalPaginas = Math.ceil(categoriasFiltradas.length / registrosPorPagina);
+
+  const inicio = (paginaActual - 1) * registrosPorPagina;
+  const categoriasPaginadas = categoriasFiltradas.slice(
+    inicio,
+    inicio + registrosPorPagina
+  );
 
   return (
     <Container className="mt-4">
       <Row>
         <Col>
-          {/* Header estilo Discosa */}
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <div className="d-flex align-items-center gap-3">
-              <span className="fs-3">📚</span>
-              <h1 className="display-6 fw-bold mb-0 text-dark">Categorías</h1>
-            </div>
-            
-            <Button 
-              variant="primary" 
-              size="lg"
-              className="rounded-pill px-4"
-              onClick={() => setMostrarModalRegistro(true)}
-            >
+
+          <div className="d-flex justify-content-between mb-3">
+            <h2>📚 Categorías</h2>
+            <Button onClick={() => setMostrarModalRegistro(true)}>
               + Nueva
             </Button>
           </div>
 
-          <hr className="mb-4" />
-
-          {/* Lista de Categorías */}
-          <TablaCategorias 
-            categorias={categorias} 
-            cargando={cargando}
-            onEditar={handleEditar}
-            onEliminar={handleEliminar}
+          {/* 🔍 BUSCADOR */}
+          <CuadroBusquedas 
+            texto={textoBusqueda} 
+            onChange={setTextoBusqueda} 
           />
+
+          {/* 📊 TABLA */}
+          <TablaCategorias
+            categorias={categoriasPaginadas}
+            cargando={cargando}
+            onEditar={(cat) => {
+              setCategoriaEditar(cat);
+              setMostrarModalEdicion(true);
+            }}
+            onEliminar={(cat) => {
+              setCategoriaEliminar(cat);
+              setMostrarModalEliminacion(true);
+            }}
+          />
+
+          {/* 📄 PAGINACIÓN */}
+          <div className="d-flex justify-content-center mt-4">
+            <Paginacion
+              totalPaginas={totalPaginas}
+              paginaActual={paginaActual}
+              setPaginaActual={setPaginaActual}
+            />
+          </div>
+
         </Col>
       </Row>
 
-      {/* Modales */}
       <ModalRegistroCategoria
         mostrar={mostrarModalRegistro}
         onCerrar={() => setMostrarModalRegistro(false)}
