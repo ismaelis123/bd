@@ -8,7 +8,7 @@ import TarjetaCategoria from "../categorias/TarjetaCategoria";
 import ModalEdicionCategoria from "../categorias/ModalEdicionCategoria";
 import ModalEliminacionCategoria from "../categorias/ModalEliminacionCategoria";
 import CuadroBusquedas from "../busquedas/CuadroBusquedas";
-import Paginacion from "../components/Ordenamiento/Paginacion";
+import Paginacion from "../components/ordenamiento/Paginacion";
 
 const Categorias = () => {
   const [toast, setToast] = useState({ mostrar: false, mensaje: "", tipo: "" });
