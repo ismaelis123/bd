@@ -1,44 +1,40 @@
+import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import Encabezado from "./navegacion/Encabezado";
+
 import Inicio from "./views/Inicio";
-import Login from "./views/Login";
-import Productos from "./views/Productos";
 import Categorias from "./views/Categorias";
 import Catalogo from "./views/Catalogo";
+import Productos from "./views/Productos";
+import Login from "./views/Login";
+import RutaProtegida from "../src/rutas/RutaProtegida";
 import Pagina404 from "./views/Pagina404";
-import Encabezado from "./navegacion/Encabezado";
-import RutaProtegida from "./rutas/RutaProtegida";
 
-function App() {
+import "./App.css";
+
+
+const App = () => {
   return (
     <Router>
-      <Routes>
 
-        {/* LOGIN */}
-        <Route path="/login" element={<Login />} />
+      <Encabezado />
 
-        {/* TODO PROTEGIDO */}
-        <Route
-          path="/*"
-          element={
-            <RutaProtegida>
-              <>
-                <Encabezado />
-                <Routes>
-                  <Route path="/" element={<Inicio />} />
-                  <Route path="/productos" element={<Productos />} />
-                  <Route path="/categorias" element={<Categorias />} />
-                  <Route path="/catalogo" element={<Catalogo />} />
-                  <Route path="*" element={<Pagina404 />} />
-                </Routes>
-              </>
-            </RutaProtegida>
-          }
-        />
+      <main className="margen-superior-main">
+        <Routes>
 
-      </Routes>
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/" element={<RutaProtegida><Inicio /></RutaProtegida>} />
+          <Route path="/categorias" element={<RutaProtegida><Categorias /></RutaProtegida>} />
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/productos" element={<RutaProtegida><Productos /></RutaProtegida>} />
+
+          <Route path="*" element={<Pagina404 />} />
+
+        </Routes>
+      </main>
     </Router>
   );
 }
-
 export default App;

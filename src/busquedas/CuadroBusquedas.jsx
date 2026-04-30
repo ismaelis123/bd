@@ -1,15 +1,25 @@
-import { Form } from "react-bootstrap";
+import React from "react";
+import { Form, InputGroup, Row, Col } from "react-bootstrap";
 
-function CuadroBusquedas({ texto, onChange }) {
+const CuadroBusquedas = ({ textoBusqueda, manejarCambioBusqueda }) => {
   return (
-    <Form.Control
-      type="text"
-      placeholder="🔍 Buscar categoría..."
-      value={texto}
-      onChange={(e) => onChange(e.target.value)}
-      className="mb-3"
-    />
+    <Row className="mb-3">
+      <Col xs={12} sm={8} md={6} lg={4}> {/* Controla el ancho en diferentes pantallas */}
+        <InputGroup size="sm shadow-sm">
+          <InputGroup.Text className="bg-white border-end-0">
+            <i className="bi bi-search text-muted"></i>
+          </InputGroup.Text>
+          <Form.Control
+            className="border-start-0 ps-0"
+            type="text"
+            placeholder="Buscar categoría..."
+            value={textoBusqueda}
+            onChange={manejarCambioBusqueda}
+          />
+        </InputGroup>
+      </Col>
+    </Row>
   );
-}
+};
 
 export default CuadroBusquedas;
