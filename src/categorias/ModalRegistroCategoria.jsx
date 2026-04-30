@@ -1,116 +1,72 @@
-import { useState } from "react";
-import { supabase } from "../database/supabaseconfig";
+import React, { useState } from "react";
+import { Modal, Form, Button } from "react-bootstrap";
 
-function ModalRegistroCategoria({ mostrar, onCerrar, onGuardado }) {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [cargando, setCargando] = useState(false);
+const ModalRegistroCategoria = ({
+  mostrarModal,
+  setMostrarModal,
+  nuevaCategoria,
+  manejoCambioInput,
+  agregarCategoria,
+}) => {
+  const [deshabilitado, setDeshabilitado] = useState(false);
 
-  const guardarCategoria = async () => {
-    if (cargando) return;
-
-    if (!nombre.trim()) {
-      alert("El nombre es obligatorio");
-      return;
-    }
-
-    setCargando(true);
-
-    // 🔥 VALIDAR DUPLICADO
-    const { data: existe } = await supabase
-      .from("categorias")
-      .select("*")
-      .ilike("nombre", nombre.trim());
-
-    if (existe.length > 0) {
-      alert("Ya existe esa categoría ⚠️");
-      setCargando(false);
-      return;
-    }
-
-    const { error } = await supabase
-      .from("categorias")
-      .insert([{ 
-        nombre: nombre.trim(), 
-        descripcion: descripcion.trim() 
-      }]);
-
-    setCargando(false);
-
-    if (error) {
-      alert("Error al guardar");
-    } else {
-      onGuardado();
-      onCerrar();
-      setNombre("");
-      setDescripcion("");
-    }
+  const handleRegistrar = async () => {
+    if (deshabilitado) return;
+    setDeshabilitado(true);
+    await agregarCategoria();
+    setDeshabilitado(false);
   };
 
-  if (!mostrar) return null;
-
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <h3>Registrar Categoría</h3>
-
-        <input
-          style={styles.input}
-          type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-
-        <textarea
-          style={styles.input}
-          placeholder="Descripción"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-        />
-
-        <div style={styles.actions}>
-          <button onClick={onCerrar}>Cancelar</button>
-          <button onClick={guardarCategoria} disabled={cargando}>
-            {cargando ? "Guardando..." : "Guardar"}
-          </button>
-        </div>
-      </div>
-    </div>
+    <Modal
+      show={mostrarModal}
+      onHide={() => setMostrarModal(false)}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Agregar Categoría</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control
+              type="text"
+              name="nombre" 
+              value={nuevaCategoria.nombre || ""}
+              onChange={manejoCambioInput}
+              placeholder="Ingresa el nombre de la categoría"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Descripción</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="descripcion"
+              value={nuevaCategoria.descripcion || ""}
+              onChange={manejoCambioInput}
+              placeholder="Ingresa la descripción"
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setMostrarModal(false)}>
+          Cancelar
+        </Button>
+        <Button
+          variant="primary"
+          onClick={handleRegistrar}
+          disabled={!nuevaCategoria.nombre || nuevaCategoria.nombre.trim() === "" || deshabilitado}
+        >
+          Guardar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
-}
-
-const styles = {
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.3)",
-    backdropFilter: "blur(4px)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2000,
-  },
-  modal: {
-    background: "#fff",
-    padding: "25px",
-    borderRadius: "12px",
-    width: "90%",
-    maxWidth: "400px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginTop: "10px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-  },
-  actions: {
-    marginTop: "15px",
-    display: "flex",
-    justifyContent: "space-between",
-  },
 };
 
 export default ModalRegistroCategoria;

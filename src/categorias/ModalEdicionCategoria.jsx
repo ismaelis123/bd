@@ -1,73 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { supabase } from "../database/supabaseconfig";
+import React, { useState } from 'react';
+import { Modal, Form, Button } from 'react-bootstrap';
 
-function ModalEdicionCategoria({ mostrar, onCerrar, categoria, onGuardado }) {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [cargando, setCargando] = useState(false);
+const ModalEdicionCategoria = ({
+  mostrarModalEdicion,
+  setMostrarModalEdicion,
+  categoriaEditar,
+  manejoCambioInputEdicion,
+  actualizarCategoria,
+}) => {
+  const [deshabilitado, setDeshabilitado] = useState(false);
 
-  useEffect(() => {
-    if (categoria) {
-      setNombre(categoria.nombre || "");
-      setDescripcion(categoria.descripcion || "");
-    }
-  }, [categoria]);
-
-  const actualizar = async () => {
-    if (!nombre.trim()) return alert("El nombre es obligatorio");
-
-    setCargando(true);
-    const { error } = await supabase
-      .from("categorias")
-      .update({ nombre: nombre.trim(), descripcion: descripcion.trim() })
-      .eq("id_categoria", categoria.id_categoria);
-
-    setCargando(false);
-
-    if (error) alert("Error al actualizar");
-    else {
-      alert("Categoría actualizada ✅");
-      onGuardado();
-      onCerrar();
-    }
+  const handleActualizar = async () => {
+    if (deshabilitado) return;
+    setDeshabilitado(true);
+    await actualizarCategoria();
+    setDeshabilitado(false);
   };
 
-  if (!mostrar || !categoria) return null;
-
   return (
-    <div className="modal-backdrop">
-      <div className="card" style={{ maxWidth: "420px" }}>
-        <h2 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          ✏️ Editar Categoría
-        </h2>
-
-        <input
-          type="text"
-          className="form-control mb-3"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          placeholder="Nombre"
-        />
-
-        <textarea
-          className="form-control mb-3"
-          rows="3"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripción"
-        />
-
-        <div className="d-flex gap-2 justify-content-end">
-          <button className="btn btn-secondary" onClick={onCerrar} disabled={cargando}>
-            Cancelar
-          </button>
-          <button className="btn btn-primary" onClick={actualizar} disabled={cargando}>
-            {cargando ? "Actualizando..." : "Actualizar Categoría"}
-          </button>
-        </div>
-      </div>
-    </div>
+    <Modal
+      show={mostrarModalEdicion}
+      onHide={() => setMostrarModalEdicion(false)}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Editar Categoría</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control
+              type="text"
+              name="nombre" // Corregido: coincide con la columna de tu BD
+              value={categoriaEditar.nombre || ""}
+              onChange={manejoCambioInputEdicion}
+              placeholder="Ingresa el nombre"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Descripción</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="descripcion" // Corregido: coincide con la columna de tu BD
+              value={categoriaEditar.descripcion || ""}
+              onChange={manejoCambioInputEdicion}
+              placeholder="Ingresa la descripción"
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setMostrarModalEdicion(false)}>
+          Cancelar
+        </Button>
+        <Button
+          variant="primary"
+          onClick={handleActualizar}
+          // Validación ajustada a los nuevos nombres de campo
+          disabled={!categoriaEditar.nombre || categoriaEditar.nombre.trim() === "" || deshabilitado}
+        >
+          Actualizar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
-}
+};
 
 export default ModalEdicionCategoria;

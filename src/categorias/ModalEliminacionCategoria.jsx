@@ -1,61 +1,50 @@
 import React, { useState } from "react";
-import { supabase } from "../database/supabaseconfig";
+import { Modal, Button } from "react-bootstrap";
 
-function ModalEliminacionCategoria({ mostrar, onCerrar, categoria, onEliminado }) {
-  const [cargando, setCargando] = useState(false);
+const ModalEliminacionCategoria = ({
+  mostrarModalEliminacion,
+  setMostrarModalEliminacion,
+  eliminarCategoria,
+  categoria,
+}) => {
+  const [deshabilitado, setDeshabilitado] = useState(false);
 
-  const eliminarCategoria = async () => {
-    if (!categoria) return;
-
-    setCargando(true);
-
-    const { error } = await supabase
-      .from("categorias")
-      .delete()
-      .eq("id_categoria", categoria.id_categoria);
-
-    setCargando(false);
-
-    if (error) {
-      alert("Error al eliminar la categoría");
-      console.error(error);
-    } else {
-      alert("Categoría eliminada correctamente 🗑️");
-      onEliminado();
-      onCerrar();
-    }
+  const handleEliminar = async () => {
+    if (deshabilitado) return;
+    setDeshabilitado(true);
+    await eliminarCategoria();
+    setDeshabilitado(false);
   };
 
-  if (!mostrar || !categoria) return null;
-
   return (
-    <div className="modal-backdrop">
-      <div className="card">
-        <h2 className="text-danger">🗑️ Eliminar Categoría</h2>
-        
-        <p className="lead mb-1">¿Estás seguro de eliminar esta categoría?</p>
-        <p className="fw-bold text-dark mb-4">"{categoria.nombre}"</p>
-        <p className="text-muted small">Esta acción no se puede deshacer.</p>
-
-        <div className="d-flex gap-2 justify-content-end mt-4">
-          <button 
-            className="btn btn-secondary" 
-            onClick={onCerrar}
-            disabled={cargando}
-          >
-            Cancelar
-          </button>
-          <button 
-            className="btn btn-danger" 
-            onClick={eliminarCategoria}
-            disabled={cargando}
-          >
-            {cargando ? "Eliminando..." : "Sí, Eliminar"}
-          </button>
-        </div>
-      </div>
-    </div>
+    <Modal
+      show={mostrarModalEliminacion}
+      onHide={() => setMostrarModalEliminacion(false)}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmar Eliminación</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        ¿Estás seguro de que deseas eliminar la categoría "
+        <strong>{categoria?.nombre}</strong>"? {/* Corregido: 'nombre' según tu diagrama */}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setMostrarModalEliminacion(false)}>
+          Cancelar
+        </Button>
+        <Button
+          variant="danger"
+          onClick={handleEliminar}
+          disabled={deshabilitado}
+        >
+          Eliminar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
-}
+};
 
 export default ModalEliminacionCategoria;

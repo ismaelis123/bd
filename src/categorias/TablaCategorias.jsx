@@ -1,118 +1,62 @@
 import React from "react";
-import { Row, Col, Card, Table, Button, Badge } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 
-function TablaCategorias({ categorias, cargando, onEditar, onEliminar }) {
-
-  if (cargando) {
-    return <p className="text-center mt-5">Cargando...</p>;
-  }
-
+const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion }) => {
   return (
-    <>
-      {/* ================= DESKTOP ================= */}
-      <div className="d-none d-lg-block">
-        <Table hover responsive className="shadow-sm rounded overflow-hidden">
-          <thead style={{ background: "#1e293b", color: "#fff" }}>
-            <tr>
-              <th className="text-center" style={{ width: "80px" }}>ID</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th className="text-center">Estado</th>
-              <th className="text-center" style={{ width: "140px" }}>Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {categorias.map((cat) => (
-              <tr key={cat.id_categoria}>
-                <td className="text-center fw-bold">{cat.id_categoria}</td>
-
-                <td className="fw-semibold">{cat.nombre}</td>
-
-                <td className="text-muted">
-                  {cat.descripcion || "Sin descripción"}
-                </td>
-
-                <td className="text-center">
-                  <Badge bg="success">Activa</Badge>
-                </td>
-
-                <td className="text-center">
-                  <Button
-                    variant="outline-warning"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => onEditar(cat)}
-                  >
-                    ✏️
-                  </Button>
-
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => onEliminar(cat)}
-                  >
-                    🗑️
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </div>
-
-      {/* ================= MÓVIL ================= */}
-      <div className="d-lg-none">
-        <Row className="g-3">
-
+    <div className="table-responsive">
+      {/* Reducimos el padding general con un estilo CSS inline para máxima compactación */}
+      <Table striped hover borderless size="sm" className="align-middle mt-1 custom-table-compact">
+        <thead>
+          <tr className="border-bottom" style={{ fontSize: '0.85rem' }}>
+            <th className="py-2 fw-bold text-dark ps-3" style={{ width: '50px' }}>ID</th>
+            <th className="py-2 fw-bold text-dark">Nombre Categoría</th>
+            <th className="py-2 fw-bold text-dark">Descripción</th>
+            <th className="py-2 fw-bold text-dark text-end pe-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
           {categorias.map((cat) => (
-            <Col xs={12} key={cat.id_categoria}>
-              <Card className="shadow-sm border-0 rounded-4">
-                <Card.Body className="d-flex align-items-center">
-
-                  {/* ICONO */}
-                  <div className="me-3 fs-3">📑</div>
-
-                  {/* TEXTO */}
-                  <div className="flex-grow-1">
-                    <h6 className="mb-1 fw-bold">{cat.nombre}</h6>
-                    <small className="text-muted">
-                      {cat.descripcion || "Sin descripción"}
-                    </small>
-                  </div>
-
-                  {/* DERECHA */}
-                  <div className="text-end">
-                    <Badge bg="success" className="mb-2">Activa</Badge>
-
-                    <div className="d-flex gap-1">
-                      <Button
-                        size="sm"
-                        variant="outline-warning"
-                        onClick={() => onEditar(cat)}
-                      >
-                        ✏️
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        variant="outline-danger"
-                        onClick={() => onEliminar(cat)}
-                      >
-                        🗑️
-                      </Button>
-                    </div>
-                  </div>
-
-                </Card.Body>
-              </Card>
-            </Col>
+            <tr key={cat.id_categoria} style={{ fontSize: '0.85rem' }}>
+              <td className="py-1 ps-3 text-dark">{cat.id_categoria}</td>
+              <td className="py-1 text-dark fw-normal">{cat.nombre}</td>
+              <td className="py-1 text-muted fw-normal text-truncate" style={{ maxWidth: '300px' }}>
+                {cat.descripcion || '---'}
+              </td>
+              <td className="py-1 text-end pe-3">
+                {/* Botones más pequeños y pegados */}
+                <Button 
+                  variant="outline-warning" 
+                  size="sm" 
+                  className="me-1 bg-white border-warning-subtle shadow-sm" 
+                  style={{ padding: '1px 6px', borderRadius: '4px' }}
+                  onClick={() => abrirModalEdicion(cat)}
+                >
+                  <i className="bi bi-pencil" style={{ fontSize: '0.8rem' }}></i>
+                </Button>
+                
+                <Button 
+                  variant="outline-danger" 
+                  size="sm" 
+                  className="bg-white border-danger-subtle shadow-sm"
+                  style={{ padding: '1px 6px', borderRadius: '4px' }}
+                  onClick={() => abrirModalEliminacion(cat)}
+                >
+                  <i className="bi bi-trash" style={{ fontSize: '0.8rem' }}></i>
+                </Button>
+              </td>
+            </tr>
           ))}
+        </tbody>
+      </Table>
 
-        </Row>
-      </div>
-    </>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .custom-table-compact td, .custom-table-compact th {
+          padding-top: 0.3rem !important;
+          padding-bottom: 0.3rem !important;
+        }
+      `}} />
+    </div>
   );
-}
+};
 
 export default TablaCategorias;
