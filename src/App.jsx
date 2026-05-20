@@ -1,47 +1,119 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from "react-router-dom";
 
 import Encabezado from "./navegacion/Encabezado";
 
 import Inicio from "./views/Inicio";
 import Categorias from "./views/Categorias";
-import Catalogo from "./components/Catalogo";
 import Productos from "./views/Productos";
+import Empleados from "./views/Empleados";
+
+import Catalogo from "./components/Catalogo";
+
 import Login from "./views/Login";
+
 import RutaProtegida from "./rutas/RutaProtegida";
+
 import Pagina404 from "./views/Pagina404";
 
 import "./App.css";
 
 const Layout = () => {
+
   const location = useLocation();
 
   return (
     <>
-      {location.pathname !== "/login" && <Encabezado />}
+
+      {/* OCULTAR NAVBAR EN LOGIN */}
+      {location.pathname !== "/login" && (
+        <Encabezado />
+      )}
 
       <main className="margen-superior-main">
-        <Routes>
-          <Route path="/login" element={<Login />} />
 
-          <Route path="/" element={<RutaProtegida><Inicio /></RutaProtegida>} />
-          <Route path="/categorias" element={<RutaProtegida><Categorias /></RutaProtegida>} />
-          <Route path="/productos" element={<RutaProtegida><Productos /></RutaProtegida>} />
+        <Routes>
+
+          {/* LOGIN */}
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          {/* INICIO */}
+          <Route
+            path="/"
+            element={
+              <RutaProtegida>
+                <Inicio />
+              </RutaProtegida>
+            }
+          />
+
+          {/* CATEGORÍAS */}
+          <Route
+            path="/categorias"
+            element={
+              <RutaProtegida>
+                <Categorias />
+              </RutaProtegida>
+            }
+          />
+
+          {/* PRODUCTOS */}
+          <Route
+            path="/productos"
+            element={
+              <RutaProtegida>
+                <Productos />
+              </RutaProtegida>
+            }
+          />
+
+          {/* EMPLEADOS */}
+          <Route
+            path="/empleados"
+            element={
+              <RutaProtegida>
+                <Empleados />
+              </RutaProtegida>
+            }
+          />
 
           {/* CATÁLOGO PÚBLICO */}
-          <Route path="/catalogo" element={<Catalogo />} />
+          <Route
+            path="/catalogo"
+            element={<Catalogo />}
+          />
 
-          <Route path="*" element={<Pagina404 />} />
+          {/* 404 */}
+          <Route
+            path="*"
+            element={<Pagina404 />}
+          />
+
         </Routes>
+
       </main>
+
     </>
   );
 };
 
 const App = () => {
+
   return (
+
     <Router>
+
       <Layout />
+
     </Router>
+
   );
 };
 
