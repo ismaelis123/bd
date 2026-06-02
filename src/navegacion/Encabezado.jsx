@@ -1,342 +1,250 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
 
-import { supabase } from "../database/supabaseconfig";
+import {
+  useNavigate,
+  useLocation
+} from "react-router-dom";
+
+import {
+  Container,
+  Nav,
+  Navbar,
+  Offcanvas,
+  Button
+} from "react-bootstrap";
+
+import ChatIA from "../components/ia/ChatIA";
+
+import { supabase }
+from "../database/supabaseconfig";
 
 const Encabezado = () => {
 
-  const [mostrarMenu, setMostrarMenu] = useState(false);
+  const [mostrarMenu,
+    setMostrarMenu] =
+    useState(false);
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  // CHAT IA
+  const [mostrarChatIA,
+    setMostrarChatIA] =
+    useState(false);
+
+  const navigate =
+    useNavigate();
+
+  const location =
+    useLocation();
 
   const manejarToggle = () => {
-    setMostrarMenu(!mostrarMenu);
+
+    setMostrarMenu(
+      !mostrarMenu
+    );
+
   };
 
-  const manejarNavegacion = (ruta) => {
+  const manejarNavegacion = (
+    ruta
+  ) => {
+
     navigate(ruta);
+
     setMostrarMenu(false);
+
   };
 
-  // 🔥 CERRAR SESIÓN
-  const cerrarSesion = async () => {
+  // CERRAR SESIÓN
+  const cerrarSesion =
+    async () => {
 
     try {
 
-      const { error } = await supabase.auth.signOut();
+      await supabase.auth.signOut();
 
-      if (error) throw error;
-
-      localStorage.removeItem("usuario-supabase");
-
-      setMostrarMenu(false);
+      localStorage.removeItem(
+        "usuario-supabase"
+      );
 
       navigate("/login");
 
-    } catch (err) {
+    } catch (error) {
 
-      console.error(
-        "Error cerrando sesión:",
-        err.message
-      );
+      console.log(error);
 
     }
+
   };
 
-  // 🔥 RUTAS
-  const esLogin = location.pathname === "/login";
-
-  const esCatalogo =
-    location.pathname === "/catalogo" &&
-    localStorage.getItem("usuario-supabase") === null;
-
-  // 🔥 MENÚ
-  let contenidoMenu;
-
-  // LOGIN
-  if (esLogin) {
-
-    contenidoMenu = (
-
-      <Nav className="ms-auto pe-2">
-
-        <Nav.Link
-          onClick={() => manejarNavegacion("/login")}
-          className={
-            mostrarMenu
-              ? "color-texto-marca"
-              : "text-black"
-          }
-        >
-
-          <i className="bi-person-fill-lock me-2"></i>
-
-          Iniciar sesión
-
-        </Nav.Link>
-
-      </Nav>
-
-    );
-
-  }
-
-  // CATÁLOGO PÚBLICO
-  else if (esCatalogo) {
-
-    contenidoMenu = (
-
-      <Nav className="ms-auto pe-2">
-
-        <Nav.Link
-          onClick={() => manejarNavegacion("/catalogo")}
-          className={
-            mostrarMenu
-              ? "color-texto-marca"
-              : "text-black"
-          }
-        >
-
-          <i className="bi-images me-2"></i>
-
-          <strong>Catálogo</strong>
-
-        </Nav.Link>
-
-      </Nav>
-
-    );
-
-  }
-
-  // ADMIN
-  else {
-
-    contenidoMenu = (
-      <>
-
-        <Nav className="ms-auto pe-2">
-
-          {/* INICIO */}
-          <Nav.Link
-            onClick={() => manejarNavegacion("/")}
-            className={
-              mostrarMenu
-                ? "color-texto-marca"
-                : "text-black"
-            }
-          >
-
-            {mostrarMenu &&
-              <i className="bi-house-fill me-2"></i>
-            }
-
-            <strong>Inicio</strong>
-
-          </Nav.Link>
-
-          {/* CATEGORÍAS */}
-          <Nav.Link
-            onClick={() => manejarNavegacion("/categorias")}
-            className={
-              mostrarMenu
-                ? "color-texto-marca"
-                : "text-black"
-            }
-          >
-
-            {mostrarMenu &&
-              <i className="bi-bookmark-fill me-2"></i>
-            }
-
-            <strong>Categorías</strong>
-
-          </Nav.Link>
-
-          {/* PRODUCTOS */}
-          <Nav.Link
-            onClick={() => manejarNavegacion("/productos")}
-            className={
-              mostrarMenu
-                ? "color-texto-marca"
-                : "text-black"
-            }
-          >
-
-            {mostrarMenu &&
-              <i className="bi-bag-heart-fill me-2"></i>
-            }
-
-            <strong>Productos</strong>
-
-          </Nav.Link>
-
-          {/* EMPLEADOS */}
-          <Nav.Link
-            onClick={() => manejarNavegacion("/empleados")}
-            className={
-              mostrarMenu
-                ? "color-texto-marca"
-                : "text-black"
-            }
-          >
-
-            {mostrarMenu &&
-              <i className="bi-people-fill me-2"></i>
-            }
-
-            <strong>Empleados</strong>
-
-          </Nav.Link>
-
-          {/* CATÁLOGO */}
-          <Nav.Link
-            onClick={() => manejarNavegacion("/catalogo")}
-            className={
-              mostrarMenu
-                ? "color-texto-marca"
-                : "text-black"
-            }
-          >
-
-            {mostrarMenu &&
-              <i className="bi-images me-2"></i>
-            }
-
-            <strong>Catálogo</strong>
-
-          </Nav.Link>
-
-          <hr />
-
-          {/* BOTÓN CERRAR EN NAVBAR */}
-          {!mostrarMenu && (
-
-            <Nav.Link
-              onClick={cerrarSesion}
-              className="text-black"
-            >
-
-              <i className="bi-box-arrow-right me-2"></i>
-
-            </Nav.Link>
-
-          )}
-
-        </Nav>
-
-        {/* INFO USUARIO */}
-        {mostrarMenu && (
-
-          <div className="mt-3 p-3 rounded bg-light text-dark">
-
-            <p className="mb-2">
-
-              <i className="bi-envelope-fill me-2"></i>
-
-              {
-                localStorage
-                  .getItem("usuario-supabase")
-                  ?.toLowerCase()
-                || "Usuario"
-              }
-
-            </p>
-
-            <button
-              className="btn btn-outline-danger mt-3 w-100"
-              onClick={cerrarSesion}
-            >
-
-              <i className="bi-box-arrow-right me-2"></i>
-
-              Cerrar sesión
-
-            </button>
-
-          </div>
-
-        )}
-
-      </>
-    );
-  }
+  const esLogin =
+    location.pathname ===
+    "/login";
 
   return (
 
-    <Navbar
-      expand="md"
-      fixed="top"
-      className="color-navbar shadow-lg"
-      variant="dark"
-    >
+    <>
 
-      <Container>
+      <Navbar
+        expand="md"
+        fixed="top"
+        className="color-navbar shadow-lg"
+        variant="dark"
+      >
 
-        {/* LOGO */}
-        <Navbar.Brand
-          onClick={() =>
-            manejarNavegacion(
-              esCatalogo
-                ? "/catalogo"
-                : "/"
-            )
-          }
-          className="text-black fw-bold d-flex align-items-center"
-          style={{ cursor: "pointer" }}
-        >
+        <Container>
 
-          <strong>
+          {/* LOGO */}
+          <Navbar.Brand
+            onClick={() =>
+              manejarNavegacion("/")
+            }
+            className="text-black fw-bold"
+            style={{
+              cursor: "pointer"
+            }}
+          >
 
-            <h4 className="mb-0">
-              Ferretería Laredo Kit
-            </h4>
+            Ferretería Laredo Kit
 
-          </strong>
+          </Navbar.Brand>
 
-        </Navbar.Brand>
+          {/* BOTÓN MENU */}
+          {!esLogin && (
 
-        {/* BOTÓN MENU */}
-        {!esLogin && (
+            <Navbar.Toggle
+              aria-controls="menu-offcanvas"
+              onClick={
+                manejarToggle
+              }
+            />
 
-          <Navbar.Toggle
-            aria-controls="menu-offcanvas"
-            onClick={manejarToggle}
-          />
+          )}
 
-        )}
+          {/* MENU */}
+          <Navbar.Offcanvas
+            id="menu-offcanvas"
+            placement="end"
+            show={mostrarMenu}
+            onHide={() =>
+              setMostrarMenu(false)
+            }
+          >
 
-        {/* OFFCANVAS */}
-        <Navbar.Offcanvas
-          id="menu-offcanvas"
-          placement="end"
-          show={mostrarMenu}
-          onHide={() => setMostrarMenu(false)}
-        >
+            <Offcanvas.Header closeButton>
 
-          <Offcanvas.Header closeButton>
+              <Offcanvas.Title>
 
-            <Offcanvas.Title>
-              Menú Principal
-            </Offcanvas.Title>
+                Menú Principal
 
-          </Offcanvas.Header>
+              </Offcanvas.Title>
 
-          <Offcanvas.Body>
+            </Offcanvas.Header>
 
-            {contenidoMenu}
+            <Offcanvas.Body>
 
-          </Offcanvas.Body>
+              <Nav className="ms-auto pe-2">
 
-        </Navbar.Offcanvas>
+                {/* INICIO */}
+                <Nav.Link
+                  onClick={() =>
+                    manejarNavegacion("/")
+                  }
+                >
+                  Inicio
+                </Nav.Link>
 
-      </Container>
+                {/* CATEGORÍAS */}
+                <Nav.Link
+                  onClick={() =>
+                    manejarNavegacion(
+                      "/categorias"
+                    )
+                  }
+                >
+                  Categorías
+                </Nav.Link>
 
-    </Navbar>
+                {/* PRODUCTOS */}
+                <Nav.Link
+                  onClick={() =>
+                    manejarNavegacion(
+                      "/productos"
+                    )
+                  }
+                >
+                  Productos
+                </Nav.Link>
+
+                {/* EMPLEADOS */}
+                <Nav.Link
+                  onClick={() =>
+                    manejarNavegacion(
+                      "/empleados"
+                    )
+                  }
+                >
+                  Empleados
+                </Nav.Link>
+
+                {/* CATÁLOGO */}
+                <Nav.Link
+                  onClick={() =>
+                    manejarNavegacion(
+                      "/catalogo"
+                    )
+                  }
+                >
+                  Catálogo
+                </Nav.Link>
+
+                {/* IA */}
+                <Button
+                  className="mt-3"
+                  onClick={() =>
+                    setMostrarChatIA(
+                      true
+                    )
+                  }
+                >
+
+                  IA
+
+                </Button>
+
+                {/* CERRAR */}
+                <Button
+                  variant="danger"
+                  className="mt-3"
+                  onClick={
+                    cerrarSesion
+                  }
+                >
+
+                  Cerrar sesión
+
+                </Button>
+
+              </Nav>
+
+            </Offcanvas.Body>
+
+          </Navbar.Offcanvas>
+
+        </Container>
+
+      </Navbar>
+
+      {/* CHAT IA */}
+      <ChatIA
+        mostrar={mostrarChatIA}
+        onCerrar={() =>
+          setMostrarChatIA(false)
+        }
+      />
+
+    </>
 
   );
+
 };
 
 export default Encabezado;

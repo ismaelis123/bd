@@ -18,23 +18,27 @@ const FormularioLogin = () => {
 
     e.preventDefault();
 
+    // LOGIN NORMAL
     const { error } =
       await supabase.auth.signInWithPassword({
         email,
         password
       });
 
+    // ERROR
     if (error) {
 
       console.log(error);
 
-      alert(error.message);
+      alert(
+        "Credenciales incorrectas"
+      );
 
-    } else {
-
-      navigate("/");
-
+      return;
     }
+
+    // REDIRECCIONAR
+    navigate("/");
 
   };
 
@@ -42,7 +46,9 @@ const FormularioLogin = () => {
 
     <div className="login-card">
 
-      <h2>Iniciar Sesión</h2>
+      <h2>
+        Iniciar Sesión
+      </h2>
 
       <form onSubmit={iniciarSesion}>
 
@@ -67,7 +73,9 @@ const FormularioLogin = () => {
         />
 
         <button type="submit">
+
           Ingresar
+
         </button>
 
       </form>
@@ -75,6 +83,7 @@ const FormularioLogin = () => {
     </div>
 
   );
+
 };
 
 export default FormularioLogin;
