@@ -7,6 +7,9 @@ import ModalEdicionProducto from '../productos/ModalEdicionProducto';
 import TarjetasProductos from '../productos/TarjetasProductos';
 import NotificacionOperacion from '../components/NotificacionOperacion';
 
+// 1. IMPORTAR EL NUEVO MODAL DE QR
+import ModalQRProducto from '../productos/ModalQRProducto';
+
 const Productos = () => {
 
   const [productos, setProductos] = useState([]);
@@ -19,6 +22,10 @@ const Productos = () => {
   const [showRegistro, setShowRegistro] = useState(false);
   const [showEdicion, setShowEdicion] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+  // 🔔 ESTADOS PARA EL CODIGO QR
+  const [mostrarModalQR, setMostrarModalQR] = useState(false);
+  const [productoQR, setProductoQR] = useState(null);
 
   // 🔔 NOTIFICACIONES
   const [mostrarToast, setMostrarToast] = useState(false);
@@ -40,7 +47,6 @@ const Productos = () => {
   }, [busqueda, filtroCategoria, productos]);
 
   const fetchData = async () => {
-
     const { data: catData } = await supabase
       .from('categorias')
       .select('*');
@@ -73,13 +79,21 @@ const Productos = () => {
     setProductosFiltrados(filtrados);
   };
 
+  // 🛠️ MÉTODO PARA GENERAR QR (Validando con tus notificaciones existentes)
+  const generarQRImagen = (producto) => {
+    if (!producto?.url_imagen) {
+      mostrarNotificacion("Este producto no tiene imagen asociada ⚠️", "advertencia");
+      return;
+    }
+    setProductoQR(producto);
+    setMostrarModalQR(true);
+  };
+
   // 🗑️ ELIMINAR PRODUCTO
   const eliminarProducto = async (id, url_imagen) => {
-
     if (!confirm("¿Eliminar producto?")) return;
 
     try {
-
       // eliminar imagen del storage
       if (url_imagen) {
         const nombre = url_imagen.split('/').pop();
@@ -114,7 +128,6 @@ const Productos = () => {
 
       {/* 🔍 BUSCADOR + FILTRO */}
       <Row className="mb-3">
-
         <Col md={6}>
           <Form.Control
             placeholder="Buscar producto..."
@@ -136,10 +149,9 @@ const Productos = () => {
             ))}
           </Form.Select>
         </Col>
-
       </Row>
 
-      {/* 🛍️ TARJETAS */}
+      {/* 🛍️ TARJETAS (Se pasa la función generarQRImagen como prop) */}
       <TarjetasProductos
         productos={productosFiltrados}
         categorias={categorias}
@@ -148,6 +160,7 @@ const Productos = () => {
           setShowEdicion(true);
         }}
         eliminarProducto={eliminarProducto}
+        generarQRImagen={generarQRImagen} 
       />
 
       {/* MODAL REGISTRO */}
@@ -173,6 +186,13 @@ const Productos = () => {
           mostrarNotificacion={mostrarNotificacion}
         />
       )}
+
+      {/* 2. NUEVO MODAL DE VISUALIZACIÓN QR DINÁMICO */}
+      <ModalQRProducto
+        mostrar={mostrarModalQR}
+        onHide={() => setMostrarModalQR(false)}
+        producto={productoQR}
+      />
 
       {/* 🔔 TOAST */}
       <NotificacionOperacion

@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
 
-const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion }) => {
+const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion, copiarCategoria }) => {
   return (
     <div className="table-responsive">
       {/* Reducimos el padding general con un estilo CSS inline para máxima compactación */}
@@ -23,6 +23,18 @@ const TablaCategorias = ({ categorias, abrirModalEdicion, abrirModalEliminacion 
                 {cat.descripcion || '---'}
               </td>
               <td className="py-1 text-end pe-3">
+                {/* BOTÓN NUEVO: COPIAR AL PORTAPAPELES */}
+                <Button 
+                  variant="outline-success" 
+                  size="sm" 
+                  className="me-1 bg-white border-success-subtle shadow-sm" 
+                  style={{ padding: '1px 6px', borderRadius: '4px' }}
+                  onClick={() => copiarCategoria(cat)}
+                  title="Copiar al portapapeles"
+                >
+                  <i className="bi bi-clipboard" style={{ fontSize: '0.8rem' }}></i>
+                </Button>
+
                 {/* Botones más pequeños y pegados */}
                 <Button 
                   variant="outline-warning" 

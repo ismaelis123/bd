@@ -1,7 +1,7 @@
 import React from "react";
-import { Row, Col, Card, Button, Badge } from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 
-const TarjetasProductos = ({ productos, categorias, abrirEdicion, eliminarProducto }) => {
+const TarjetasProductos = ({ productos, categorias, abrirEdicion, eliminarProducto, generarQRImagen }) => {
 
   const obtenerCategoria = (id) => {
     const cat = categorias.find(c => c.id_categoria == id);
@@ -28,14 +28,17 @@ const TarjetasProductos = ({ productos, categorias, abrirEdicion, eliminarProduc
                   borderRadius: "6px",
                   marginRight: "10px"
                 }}
+                alt={p.nombre}
               />
 
               {/* 📄 INFO */}
               <div className="flex-grow-1">
 
-                <div className="fw-bold text-truncate">{p.nombre}</div>
+                <div className="fw-bold text-truncate" style={{ maxWidth: "140px" }}>
+                  {p.nombre}
+                </div>
 
-                <small className="text-muted">
+                <small className="text-muted d-block">
                   {obtenerCategoria(p.categoria_id)}
                 </small>
 
@@ -43,20 +46,38 @@ const TarjetasProductos = ({ productos, categorias, abrirEdicion, eliminarProduc
                   C$ {Number(p.precio).toFixed(2)}
                 </div>
 
-                <small>Stock: {p.stock}</small>
+                <small className="text-secondary d-block">Stock: {p.stock}</small>
 
               </div>
 
               {/* ⚙️ ACCIONES */}
               <div className="d-flex flex-column gap-1">
 
-                <Button size="sm" variant="outline-primary"
-                  onClick={() => abrirEdicion(p)}>
+                {/* 🔍 BOTÓN NUEVO: GENERAR CÓDIGO QR */}
+                <Button 
+                  size="sm" 
+                  variant="outline-primary"
+                  onClick={() => generarQRImagen(p)}
+                  title="Generar código QR de la imagen"
+                >
+                  <i className="bi bi-qr-code"></i>
+                </Button>
+
+                <Button 
+                  size="sm" 
+                  variant="outline-warning"
+                  onClick={() => abrirEdicion(p)}
+                  title="Editar producto"
+                >
                   ✏️
                 </Button>
 
-                <Button size="sm" variant="outline-danger"
-                  onClick={() => eliminarProducto(p.id_producto, p.url_imagen)}>
+                <Button 
+                  size="sm" 
+                  variant="outline-danger"
+                  onClick={() => eliminarProducto(p.id_producto, p.url_imagen)}
+                  title="Eliminar producto"
+                >
                   🗑️
                 </Button>
 

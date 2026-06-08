@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card, Button, Badge } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 
-const TarjetaCategoria = ({ categorias, abrirModalEdicion, abrirModalEliminacion }) => {
+const TarjetaCategoria = ({ categorias, abrirModalEdicion, abrirModalEliminacion, copiarCategoria }) => {
   const [idTarjetaActiva, setIdTarjetaActiva] = useState(null);
 
   return (
@@ -18,7 +18,7 @@ const TarjetaCategoria = ({ categorias, abrirModalEdicion, abrirModalEliminacion
             <Card.Body className="p-3">
               <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center gap-3">
-                  {/* Ícono de etiqueta que pediste */}
+                  {/* Ícono de etiqueta */}
                   <div className="bg-light p-2 rounded">
                     <i className="bi bi-bookmark text-secondary fs-5"></i>
                   </div>
@@ -30,20 +30,32 @@ const TarjetaCategoria = ({ categorias, abrirModalEdicion, abrirModalEliminacion
                   </div>
                 </div>
 
-                {/* Texto "Activa" que salía antes */}
+                {/* Texto "Activa" */}
                 <div className="text-end">
                   <span className="small fw-semibold text-dark">Activa</span>
                 </div>
               </div>
 
-              {/* Capa de acciones (Editar/Eliminar) al tocar */}
+              {/* Capa de acciones (Copiar/Editar/Eliminar) al tocar */}
               {esActiva && (
                 <div
                   className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
                   style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", zIndex: 10 }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="d-flex gap-4 p-2 bg-white rounded-pill shadow-sm border">
+                  <div className="d-flex gap-3 p-2 bg-white rounded-pill shadow-sm border">
+                    {/* BOTÓN NUEVO: COPIAR AL PORTAPAPELES */}
+                    <Button
+                      variant="success"
+                      size="sm"
+                      className="rounded-circle d-flex align-items-center justify-content-center"
+                      style={{ width: '40px', height: '40px' }}
+                      onClick={() => { copiarCategoria(categoria); setIdTarjetaActiva(null); }}
+                      title="Copiar al portapapeles"
+                    >
+                      <i className="bi bi-clipboard-fill text-white"></i>
+                    </Button>
+
                     <Button
                       variant="warning"
                       size="sm"
@@ -53,6 +65,7 @@ const TarjetaCategoria = ({ categorias, abrirModalEdicion, abrirModalEliminacion
                     >
                       <i className="bi bi-pencil-fill text-white"></i>
                     </Button>
+                    
                     <Button
                       variant="danger"
                       size="sm"
