@@ -1,122 +1,60 @@
 import React, { useState } from "react";
-
-import {
-  useNavigate,
-  useLocation
-} from "react-router-dom";
-
-import {
-  Container,
-  Nav,
-  Navbar,
-  Offcanvas,
-  Button
-} from "react-bootstrap";
-
+import { useNavigate, useLocation } from "react-router-dom";
+import { Container, Nav, Navbar, Offcanvas, Button } from "react-bootstrap";
 import ChatIA from "../components/ia/ChatIA";
-
-import { supabase }
-from "../database/supabaseconfig";
+import { supabase } from "../database/supabaseconfig";
 
 const Encabezado = () => {
-
-  const [mostrarMenu,
-    setMostrarMenu] =
-    useState(false);
-
-  // CHAT IA
-  const [mostrarChatIA,
-    setMostrarChatIA] =
-    useState(false);
-
-  const navigate =
-    useNavigate();
-
-  const location =
-    useLocation();
+  const [mostrarMenu, setMostrarMenu] = useState(false);
+  const [mostrarChatIA, setMostrarChatIA] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const manejarToggle = () => {
-
-    setMostrarMenu(
-      !mostrarMenu
-    );
-
+    setMostrarMenu(!mostrarMenu);
   };
 
-  const manejarNavegacion = (
-    ruta
-  ) => {
-
+  const manejarNavegacion = (ruta) => {
     navigate(ruta);
-
     setMostrarMenu(false);
-
   };
 
-  // CERRAR SESIÓN
-  const cerrarSesion =
-    async () => {
-
+  const cerrarSesion = async () => {
     try {
-
       await supabase.auth.signOut();
-
-      localStorage.removeItem(
-        "usuario-supabase"
-      );
-
+      localStorage.removeItem("usuario-supabase");
       navigate("/login");
-
     } catch (error) {
-
       console.log(error);
-
     }
-
   };
 
-  const esLogin =
-    location.pathname ===
-    "/login";
+  const esLogin = location.pathname === "/login";
 
   return (
-
     <>
-
       <Navbar
         expand="md"
         fixed="top"
         className="color-navbar shadow-lg"
         variant="dark"
       >
-
         <Container>
-
           {/* LOGO */}
           <Navbar.Brand
-            onClick={() =>
-              manejarNavegacion("/")
-            }
+            onClick={() => manejarNavegacion("/")}
             className="text-black fw-bold"
-            style={{
-              cursor: "pointer"
-            }}
+            style={{ cursor: "pointer" }}
           >
-
             Ferretería Laredo Kit
-
           </Navbar.Brand>
 
           {/* BOTÓN MENU */}
           {!esLogin && (
-
             <Navbar.Toggle
               aria-controls="menu-offcanvas"
-              onClick={
-                manejarToggle
-              }
+              onClick={manejarToggle}
             />
-
           )}
 
           {/* MENU */}
@@ -124,127 +62,73 @@ const Encabezado = () => {
             id="menu-offcanvas"
             placement="end"
             show={mostrarMenu}
-            onHide={() =>
-              setMostrarMenu(false)
-            }
+            onHide={() => setMostrarMenu(false)}
           >
-
             <Offcanvas.Header closeButton>
-
-              <Offcanvas.Title>
-
-                Menú Principal
-
-              </Offcanvas.Title>
-
+              <Offcanvas.Title>Menú Principal</Offcanvas.Title>
             </Offcanvas.Header>
 
             <Offcanvas.Body>
-
               <Nav className="ms-auto pe-2">
-
                 {/* INICIO */}
-                <Nav.Link
-                  onClick={() =>
-                    manejarNavegacion("/")
-                  }
-                >
+                <Nav.Link onClick={() => manejarNavegacion("/")}>
                   Inicio
                 </Nav.Link>
 
                 {/* CATEGORÍAS */}
-                <Nav.Link
-                  onClick={() =>
-                    manejarNavegacion(
-                      "/categorias"
-                    )
-                  }
-                >
+                <Nav.Link onClick={() => manejarNavegacion("/categorias")}>
                   Categorías
                 </Nav.Link>
 
                 {/* PRODUCTOS */}
-                <Nav.Link
-                  onClick={() =>
-                    manejarNavegacion(
-                      "/productos"
-                    )
-                  }
-                >
+                <Nav.Link onClick={() => manejarNavegacion("/productos")}>
                   Productos
                 </Nav.Link>
 
                 {/* EMPLEADOS */}
-                <Nav.Link
-                  onClick={() =>
-                    manejarNavegacion(
-                      "/empleados"
-                    )
-                  }
-                >
+                <Nav.Link onClick={() => manejarNavegacion("/empleados")}>
                   Empleados
                 </Nav.Link>
 
                 {/* CATÁLOGO */}
-                <Nav.Link
-                  onClick={() =>
-                    manejarNavegacion(
-                      "/catalogo"
-                    )
-                  }
-                >
+                <Nav.Link onClick={() => manejarNavegacion("/catalogo")}>
                   Catálogo
+                </Nav.Link>
+
+                {/* 🛒 NUEVA OPCIÓN: VENTAS */}
+                <Nav.Link onClick={() => manejarNavegacion("/ventas")}>
+                  Ventas
                 </Nav.Link>
 
                 {/* IA */}
                 <Button
                   className="mt-3"
-                  onClick={() =>
-                    setMostrarChatIA(
-                      true
-                    )
-                  }
+                  onClick={() => setMostrarChatIA(true)}
                 >
-
                   IA
-
                 </Button>
 
                 {/* CERRAR */}
                 <Button
                   variant="danger"
                   className="mt-3"
-                  onClick={
-                    cerrarSesion
-                  }
+                  onClick={cerrarSesion}
                 >
-
                   Cerrar sesión
-
                 </Button>
-
               </Nav>
-
             </Offcanvas.Body>
-
           </Navbar.Offcanvas>
-
         </Container>
-
       </Navbar>
 
       {/* CHAT IA */}
       <ChatIA
         mostrar={mostrarChatIA}
-        onCerrar={() =>
-          setMostrarChatIA(false)
-        }
+        onCerrar={() => setMostrarChatIA(false)}
       />
-
     </>
-
   );
-
 };
 
 export default Encabezado;

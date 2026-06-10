@@ -1,48 +1,30 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation
-} from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Encabezado from "./navegacion/Encabezado";
-
 import Inicio from "./views/Inicio";
 import Categorias from "./views/Categorias";
 import Productos from "./views/Productos";
 import Empleados from "./views/Empleados";
-
+import Ventas from "./views/Ventas"; // 🛒 IMPORTACIÓN DE LA NUEVA VISTA
 import Catalogo from "./components/Catalogo";
-
 import Login from "./views/Login";
-
 import RutaProtegida from "./rutas/RutaProtegida";
-
 import Pagina404 from "./views/Pagina404";
-
 import "./App.css";
 
 const Layout = () => {
-
   const location = useLocation();
 
   return (
     <>
-
       {/* OCULTAR NAVBAR EN LOGIN */}
       {location.pathname !== "/login" && (
         <Encabezado />
       )}
 
       <main className="margen-superior-main">
-
         <Routes>
-
           {/* LOGIN */}
-          <Route
-            path="/login"
-            element={<Login />}
-          />
+          <Route path="/login" element={<Login />} />
 
           {/* INICIO */}
           <Route
@@ -84,36 +66,32 @@ const Layout = () => {
             }
           />
 
-          {/* CATÁLOGO PÚBLICO */}
+          {/* 🛒 NUEVA RUTA REGISTRADA: VENTAS */}
           <Route
-            path="/catalogo"
-            element={<Catalogo />}
+            path="/ventas"
+            element={
+              <RutaProtegida>
+                <Ventas />
+              </RutaProtegida>
+            }
           />
+
+          {/* CATÁLOGO PÚBLICO */}
+          <Route path="/catalogo" element={<Catalogo />} />
 
           {/* 404 */}
-          <Route
-            path="*"
-            element={<Pagina404 />}
-          />
-
+          <Route path="*" element={<Pagina404 />} />
         </Routes>
-
       </main>
-
     </>
   );
 };
 
 const App = () => {
-
   return (
-
     <Router>
-
       <Layout />
-
     </Router>
-
   );
 };
 
